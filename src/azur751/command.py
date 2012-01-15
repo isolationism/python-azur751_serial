@@ -92,14 +92,22 @@ class Azur751BD(object):
         # Retrieve the command response; promises to be max 25 bytes
         response = self.__conn.read(25)
 
-        # Does the response contain an @ and a \r?
+        # If an @ symbol is present but isn't the first character, slice.
+        if response.find('@') > 0:
+            response = response[response.find('@'):]
+
+            # Incomplete response? Try to get the end.
+            if response.find('\r') == -1: response += self.__conn.read(25)
+
+        # The response is valid because it has both @ (start) and \r (done)
         try:
             valid = response[0] == '@' and response[-1:] == '\r'
         except IndexError:
             valid = False
+
         if not valid:
-            self.__conn.timeout = 5
-            response = self.__conn.read()
+            self.__conn.timeout = 10 # Explicit max-reply timeout from manual.
+            response = self.__conn.read(25)
             self.__conn.timeout = self.command_interval
 
         # If we still didn't get a response, raise an error.
