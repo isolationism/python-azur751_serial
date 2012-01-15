@@ -112,6 +112,10 @@ class Azur751BD(object):
         # Return the contents of the response
         return response[3:-1].strip()
 
+    def sleep(self, seconds=1):
+        """Suspends operation for the defined number of seconds"""
+        sleep(seconds)
+
     def power_toggle(self):
         """Toggles power mode"""
         return self._cmd('pow')
@@ -119,13 +123,13 @@ class Azur751BD(object):
     def power_on(self):
         """Turns on power"""
         result = self._cmd('pon')
-        sleep(25)
+        self.sleep(25)
         return result
 
     def power_off(self):
         """Turns off power"""
         result = self._cmd('pof')
-        sleep(10) # All lights go off around 9 seconds.
+        self.sleep(10) # All lights go off around 9 seconds.
         return result
 
     def source(self):
