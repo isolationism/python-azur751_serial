@@ -131,7 +131,7 @@ class Azur751BD(object):
     def power_on(self):
         """Turns on power"""
         result = self._cmd('pon')
-        self.sleep(25)
+        self.sleep(37)
         return result
 
     def power_off(self):
